@@ -41,6 +41,6 @@ public class TestJwtUtil {
     }
 
     private UserEntity createUser() {
-        return new UserEntity("Darkness", "12345678", Roles.ADMIN, true, true, true, true);
+        return new UserEntity("Darkness", "12345678", Roles.ADMIN);
     }
 }

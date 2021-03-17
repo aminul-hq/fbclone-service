@@ -3,6 +3,7 @@ package com.clone.fbclone.services;
 import com.clone.fbclone.entities.Roles;
 import com.clone.fbclone.entities.UserEntity;
 import com.clone.fbclone.repositories.UserRepo;
+import com.clone.fbclone.services.model.AuthenticationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,8 +21,8 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepo repo;
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        return repo.findByUserName(userName);
+    public UserEntity loadUserByUsername(String userName) throws UsernameNotFoundException {
+        return repo.findByUsername(userName);
     }
 
     public UserEntity createUser(UserEntity entity){

@@ -1,14 +1,12 @@
 package com.clone.fbclone.entities;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -20,36 +18,40 @@ import java.util.Collections;
 @Data
 @Accessors(chain = true)
 @Table(name = "user_details")
+@RequiredArgsConstructor @AllArgsConstructor
 public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails {
-
-    private String userName;
-
+    @NonNull
+    @JsonProperty(value = "name")
+    @Column(nullable = false, unique = true, length = 255)
+    private String username;
+    @Column(nullable = false, length = 522)
     private String password;
-
     @Enumerated(EnumType.STRING)
     private Roles authorities;
+    @Setter(AccessLevel.PRIVATE)
     @Column(columnDefinition = "boolean default true")
     private Boolean isExpired;
-    @Column(columnDefinition = "boolean default false")
+    @Setter(AccessLevel.PRIVATE)
+    @Column(columnDefinition = "boolean default true")
     private Boolean isLocked;
-    @Column(columnDefinition = "boolean default false")
+    @Setter(AccessLevel.PRIVATE)
+    @Column(columnDefinition = "boolean default true")
     private Boolean isCredExpired;
+    @Setter(AccessLevel.PRIVATE)
     @Column(columnDefinition = "boolean default false")
     private Boolean isEnabled;
 
-    public UserEntity(String userName, String password, Roles roles, boolean isEnabled, boolean isLocked, boolean isExpired, boolean isCredExpired) {
-        this.userName = userName;
+    public UserEntity(String username, String password, Roles userRole) {
+        this.username = username;
         this.password = password;
-        this.authorities = roles;
-        this.isEnabled = isEnabled;
-        this.isLocked = isLocked;
-        this.isExpired = isExpired;
-        this.isCredExpired = isCredExpired;
-
+        this.authorities = userRole;
+        this.isEnabled = false;
+        this.isCredExpired = true;
+        this.isExpired = true;
+        this.isLocked = true;
     }
 
     public UserEntity() {
-
     }
 
     @Override
@@ -59,7 +61,7 @@ public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails 
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.username;
     }
 
     @Override
