@@ -12,6 +12,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 /**
  * @author Aminul Hoque
  * @since 2021-03-16
@@ -47,11 +50,5 @@ public class UserController {
         final UserEntity user = service.loadUserByUsername(request.getUsername());
         final String jwt = util.generateToken(user);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
-    }
-
-    @PostMapping("/validate")
-    public UserEntity validateUser(@RequestParam("token") String token){
-        System.out.println(token);
-        return null;
     }
 }

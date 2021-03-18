@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -19,7 +20,7 @@ import java.util.Collections;
 @Accessors(chain = true)
 @Table(name = "user_details")
 @RequiredArgsConstructor @AllArgsConstructor
-public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails {
+public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails, Serializable {
     @NonNull
     @JsonProperty(value = "name")
     @Column(nullable = false, unique = true, length = 255)
