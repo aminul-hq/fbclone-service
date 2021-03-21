@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "posts")
 @Data
-public class PostEntity extends BaseIdentity{
+public class PostEntity extends BaseIdentity<PostEntity>{
 
     private String title;
     @Setter(AccessLevel.PRIVATE)
