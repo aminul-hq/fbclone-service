@@ -85,4 +85,5 @@ public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails,
         return this.isEnabled;
     }
 
+
 }

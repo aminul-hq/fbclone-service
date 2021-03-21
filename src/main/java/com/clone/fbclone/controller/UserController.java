@@ -20,13 +20,11 @@ import java.util.Date;
  * @since 2021-03-16
  */
 @RestController
+@RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private MyUserDetailsService service;
-    @Autowired
-    private JwtUtil util;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    @Autowired private MyUserDetailsService service;
+    @Autowired private JwtUtil util;
+    @Autowired private AuthenticationManager authenticationManager;
 
     @GetMapping
     public ResponseEntity userLogin() {
@@ -50,5 +48,12 @@ public class UserController {
         final UserEntity user = service.loadUserByUsername(request.getUsername());
         final String jwt = util.generateToken(user);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
+
+    /** TODO create refresh token system in here */
+
+    @PostMapping("/refresh")
+    public String getRefreshToken(){
+        return "refresh token";
     }
 }

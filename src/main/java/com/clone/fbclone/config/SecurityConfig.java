@@ -1,6 +1,7 @@
 package com.clone.fbclone.config;
 
 import com.clone.fbclone.services.MyUserDetailsService;
+import com.clone.fbclone.util.CorsFilter;
 import com.clone.fbclone.util.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -22,21 +24,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired private MyUserDetailsService myUserDetailsService;
     @Autowired private JwtRequestFilter jwtRequest;
+    @Autowired private CorsFilter corsFilter;
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsService);
     }
-
-    // FIXME need to fixed forbidden response for pages
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate", "/create", "/validate").permitAll()
+                .authorizeRequests().antMatchers("/user/authenticate", "/user/create", "/user/validate").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequest, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtRequest, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(corsFilter, ChannelProcessingFilter.class);
+
     }
 
     @Bean
