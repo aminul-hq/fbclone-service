@@ -11,7 +11,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "mydays")
+@Table(name = "my_days")
 @Data
 public class Myday extends BaseIdentity<Myday>{
 
