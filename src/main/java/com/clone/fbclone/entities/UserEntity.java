@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Aminul Hoque
@@ -18,15 +19,28 @@ import java.util.Collections;
 @Entity
 @Data
 @Accessors(chain = true)
+@RequiredArgsConstructor
 @Table(name = "user_details")
-@RequiredArgsConstructor @AllArgsConstructor
 public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails, Serializable {
+
+
     @NonNull
-    @JsonProperty(value = "name")
     @Column(nullable = false, unique = true, length = 255)
-    private String username;
-    @Column(nullable = false, length = 522)
+    private String firstName;
+    @NonNull
+    @Column(nullable = false, unique = true, length = 255)
+    private String lastName;
+
+    @Setter(AccessLevel.PRIVATE)
+    String username;
+
+    @NonNull
+    @JsonProperty(value = "emaiil")
+    @Column(nullable = false, unique = true, length = 255)
+    private String email;
+    @NonNull
     private String password;
+
     @Enumerated(EnumType.STRING)
     private Roles authorities;
     @Setter(AccessLevel.PRIVATE)
@@ -42,15 +56,8 @@ public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails,
     @Column(columnDefinition = "boolean default false")
     private Boolean isEnabled;
 
-    public UserEntity(String username, String password, Roles userRole) {
-        this.username = username;
-        this.password = password;
-        this.authorities = userRole;
-        this.isEnabled = false;
-        this.isCredExpired = true;
-        this.isExpired = true;
-        this.isLocked = true;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FileEntity> image;
 
     public UserEntity() {
     }
@@ -85,5 +92,12 @@ public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails,
         return this.isEnabled;
     }
 
-
+    @PrePersist
+    void beforeSave() {
+        this.isEnabled = true;
+        this.isCredExpired = true;
+        this.isExpired = true;
+        this.isLocked = true;
+        this.username = firstName + " "+ lastName;
+    }
 }

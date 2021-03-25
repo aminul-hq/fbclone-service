@@ -11,7 +11,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -32,8 +34,16 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createUser(@RequestBody UserEntity entity) {
-        return ResponseEntity.ok().body(service.createUser(entity));
+    public ResponseEntity createUser(@RequestParam("file") MultipartFile file,
+                                     @RequestParam("fname") String fname,
+                                     @RequestParam("lname") String lname,
+                                     @RequestParam("email") String email,
+                                     @RequestParam("pass") String password
+                                     )
+            throws IOException {
+        UserEntity entity = new UserEntity(fname, lname, email,password);
+
+        return ResponseEntity.ok().body(service.createUser(entity, file));
     }
 
     @PostMapping("/authenticate")
