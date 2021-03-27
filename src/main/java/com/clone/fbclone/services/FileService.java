@@ -17,7 +17,7 @@ public class FileService {
     private FileRepo repo;
 
     public FileEntity store(MultipartFile file) throws IOException{
-        String fileName = StringUtils.cleanPath(file.getName());
+        String fileName = file.getOriginalFilename();
         FileEntity fileEntity = new FileEntity(fileName, file.getContentType(), file.getBytes());
         return repo.save(fileEntity);
     }
@@ -27,8 +27,8 @@ public class FileService {
         FileEntity fileEntity = new FileEntity(fileName, file.getContentType(), file.getBytes());
         return fileEntity;
     }
-    public FileEntity getFile(String id) {
-        return repo.findById(id).get();
+    public FileEntity getFile(String fileId) {
+        return repo.findById(fileId).get();
     }
 
     public Stream<FileEntity> getAllFiles() {

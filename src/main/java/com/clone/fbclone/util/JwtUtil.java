@@ -21,7 +21,7 @@ public class JwtUtil {
 
     private String SECRET_KEY = "secret";
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -54,7 +54,7 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, UserEntity entity) {
-        final String user = extractUsername(token);
+        final String user = extractEmail(token);
         return (user.equals(entity.getEmail()) && !isTokenExpired(token));
     }
 }

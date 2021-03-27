@@ -21,7 +21,7 @@ public abstract class BaseIdentity<T extends BaseIdentity<T>> {
     String id;
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     @SuppressWarnings("unchecked")

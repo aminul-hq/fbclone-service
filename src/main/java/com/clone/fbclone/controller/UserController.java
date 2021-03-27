@@ -11,11 +11,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author Aminul Hoque
@@ -34,16 +32,9 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createUser(@RequestParam("file") MultipartFile file,
-                                     @RequestParam("fname") String fname,
-                                     @RequestParam("lname") String lname,
-                                     @RequestParam("email") String email,
-                                     @RequestParam("pass") String password
-                                     )
+    public ResponseEntity createUser(@RequestBody UserEntity entity)
             throws IOException {
-        UserEntity entity = new UserEntity(fname, lname, email,password);
-
-        return ResponseEntity.ok().body(service.createUser(entity, file));
+        return ResponseEntity.ok().body(service.createUser(entity));
     }
 
     @PostMapping("/authenticate")
@@ -51,11 +42,12 @@ public class UserController {
         try {
             authenticationManager.authenticate
                     (new UsernamePasswordAuthenticationToken
-                            (request.getUsername(), request.getPassword()));
+                            (request.getEmail(), request.getPassword()));
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
-        final UserEntity user = service.loadUserByUsername(request.getUsername());
+        final UserEntity user = service.loadUserByUsername(request.getEmail());
+        System.out.println(user);
         final String jwt = util.generateToken(user);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
@@ -65,5 +57,10 @@ public class UserController {
     @PostMapping("/refresh")
     public String getRefreshToken(){
         return "refresh token";
+    }
+
+    @GetMapping("/{id}")
+    public Optional<UserEntity> getUserDetails(@PathVariable("id") String id){
+        return service.getUserDetails(id);
     }
 }

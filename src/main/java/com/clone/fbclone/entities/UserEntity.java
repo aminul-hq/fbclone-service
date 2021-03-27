@@ -1,13 +1,15 @@
 package com.clone.fbclone.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@Transactional
 @Table(name = "user_details")
 public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails, Serializable {
 
@@ -35,14 +39,16 @@ public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails,
     String username;
 
     @NonNull
-    @JsonProperty(value = "emaiil")
+    @JsonProperty(value = "email")
     @Column(nullable = false, unique = true, length = 255)
     private String email;
     @NonNull
+    @JsonIgnore
     private String password;
-
     @Enumerated(EnumType.STRING)
     private Roles authorities;
+
+
     @Setter(AccessLevel.PRIVATE)
     @Column(columnDefinition = "boolean default true")
     private Boolean isExpired;
@@ -55,9 +61,9 @@ public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails,
     @Setter(AccessLevel.PRIVATE)
     @Column(columnDefinition = "boolean default false")
     private Boolean isEnabled;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<FileEntity> image;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<FileEntity> images;
 
     public UserEntity() {
     }

@@ -34,7 +34,7 @@ public class TestJwtUtil {
 
     @Test
     void testExtraction(){
-        System.out.println(service.extractUsername(getToken()));
+        System.out.println(service.extractEmail(getToken()));
     }
     private String getToken() {
         return service.generateToken(createUser());
