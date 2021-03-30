@@ -21,9 +21,6 @@ import java.util.List;
 @Entity
 @Data
 @Accessors(chain = true)
-@RequiredArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@Transactional
 @Table(name = "user_details")
 public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails, Serializable {
 
@@ -62,7 +59,7 @@ public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails,
     @Column(columnDefinition = "boolean default false")
     private Boolean isEnabled;
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FileEntity> images;
 
     public UserEntity() {

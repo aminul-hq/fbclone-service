@@ -1,7 +1,7 @@
 package com.clone.fbclone;
 
-import com.clone.fbclone.entities.Roles;
 import com.clone.fbclone.entities.UserEntity;
+import com.clone.fbclone.services.model.UserDTO;
 import com.clone.fbclone.util.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ public class TestJwtUtil {
         System.out.println(getToken());
     }
 
-    @Test
-    void testValidation() {
-        System.out.println(service.validateToken(getToken(), createUser()));
-    }
+//    @Test
+//    void testValidation() {
+//        System.out.println(service.validateToken(getToken(), createUser()));
+//    }
 
     @Test
     void testExpiration() {

@@ -2,9 +2,11 @@ package com.clone.fbclone.util;
 
 import com.clone.fbclone.entities.UserEntity;
 import com.clone.fbclone.services.MyUserDetailsService;
+import com.clone.fbclone.services.model.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Aminul Hoque
@@ -37,10 +41,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             email = util.extractEmail(jwt);
         }
         if (email !=null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserEntity userEntity = this.service.loadUserByUsername(email);
-            if (util.validateToken(jwt, userEntity)){
+            UserEntity user = this.service.loadUserByUsername(email);
+            UserDTO dto = new UserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getAuthorities(), Arrays.asList(new UserDTO.Images(UserDTO.ImageType.PROFILE, "12334")));
+            if (util.validateToken(jwt, dto)){
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userEntity, null, userEntity.getAuthorities());
+                        user, null, dto.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

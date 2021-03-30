@@ -2,19 +2,15 @@ package com.clone.fbclone.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.io.Serializable;
 
 @Entity
 @Data
 @Table(name = "files")
 @AllArgsConstructor
-@Transactional
 @RequiredArgsConstructor
 public class FileEntity extends BaseIdentity<FileEntity> implements Serializable {
     @NonNull
@@ -23,7 +19,7 @@ public class FileEntity extends BaseIdentity<FileEntity> implements Serializable
     private String type;
     @NonNull
     private String url;
-    @Lob
+    @Column(columnDefinition = "bytea")
     private byte[] data;
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)

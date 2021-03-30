@@ -1,6 +1,7 @@
 package com.clone.fbclone.util;
 
 import com.clone.fbclone.entities.UserEntity;
+import com.clone.fbclone.services.model.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -53,7 +54,7 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    public Boolean validateToken(String token, UserEntity entity) {
+    public Boolean validateToken(String token, UserDTO entity) {
         final String user = extractEmail(token);
         return (user.equals(entity.getEmail()) && !isTokenExpired(token));
     }

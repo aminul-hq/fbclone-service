@@ -35,7 +35,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     public UserEntity createUser(UserEntity entity, MultipartFile file) throws IOException {
         UserEntity userEntity = entity;
-        userEntity.setImages(Collections.singletonList(service.saveUserImage(file)));
+//        userEntity.setImages(Collections.singletonList(service.saveUserImage(file)));
         return repo.save(entity);
     }
 
