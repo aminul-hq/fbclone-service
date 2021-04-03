@@ -19,11 +19,12 @@ public class FileEntity extends BaseIdentity<FileEntity> implements Serializable
     private String type;
     @NonNull
     private String url;
-    @Column(columnDefinition = "bytea")
+    @Lob
+    @Column(name = "file_data")
     private byte[] data;
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     UserEntity user;
 
     public FileEntity(String fileName, String contentType, byte[] bytes) {

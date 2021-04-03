@@ -16,9 +16,13 @@ public class FileService {
     @Autowired
     private FileRepo repo;
 
+    /**
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public FileEntity store(MultipartFile file) throws IOException{
-        String fileName = file.getOriginalFilename();
-        FileEntity fileEntity = new FileEntity(fileName, file.getContentType(), file.getBytes());
+        FileEntity fileEntity = new FileEntity(file.getOriginalFilename(), file.getContentType(), file.getBytes());
         return repo.save(fileEntity);
     }
 

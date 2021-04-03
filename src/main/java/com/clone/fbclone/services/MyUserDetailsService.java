@@ -1,10 +1,11 @@
 package com.clone.fbclone.services;
 
 
+import com.clone.fbclone.entities.FileEntity;
+import com.clone.fbclone.entities.Roles;
 import com.clone.fbclone.entities.UserEntity;
 import com.clone.fbclone.repositories.FileRepo;
 import com.clone.fbclone.repositories.UserRepo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -33,25 +33,27 @@ public class MyUserDetailsService implements UserDetailsService {
         return repo.findByEmail(email);
     }
 
-    public UserEntity createUser(UserEntity entity, MultipartFile file) throws IOException {
-        UserEntity userEntity = entity;
-//        userEntity.setImages(Collections.singletonList(service.saveUserImage(file)));
+    public UserEntity createUser(UserEntity entity) {
         return repo.save(entity);
     }
 
-
-    public UserEntity createUser(UserEntity entity) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        UserEntity userEntity = entity;
-//        userEntity.setImage(Arrays.asList(fileRepo.getOne("402881167872ed2c01787380adc60001")));
-//        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userEntity));
-        return repo.save(entity);
+    public UserEntity createUser(String fname, String lname, String email, String pass, String auth, MultipartFile file) throws IOException {
+        FileEntity fileEntity = new FileEntity(file.getOriginalFilename(), file.getContentType(), file.getBytes());
+        UserEntity entity = new UserEntity()
+                .setFirstName(fname)
+                .setLastName(lname)
+                .setEmail(email)
+                .setPassword(pass)
+                .setAuthorities(Roles.USER);
+        UserEntity user = repo.save(entity);
+        fileEntity.setUser(user);
+        fileRepo.save(fileEntity);
+        return user;
     }
 
     public Optional<UserEntity> getUserDetails(String id){
         return repo.findById(id);
     }
 
-//    new UserEntity("darkness", "14110018", Roles.ADMIN, true, true, true, true);
 
 }

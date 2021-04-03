@@ -42,7 +42,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         if (email !=null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserEntity user = this.service.loadUserByUsername(email);
-            UserDTO dto = new UserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getAuthorities(), Arrays.asList(new UserDTO.Images(UserDTO.ImageType.PROFILE, "12334")));
+            UserDTO dto = new UserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getAuthorities(), Arrays.asList(new UserDTO.Images("12334")));
             if (util.validateToken(jwt, dto)){
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         user, null, dto.getAuthorities());

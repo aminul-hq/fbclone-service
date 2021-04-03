@@ -23,29 +23,24 @@ import java.util.List;
 @Accessors(chain = true)
 @Table(name = "user_details")
 public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails, Serializable {
-
-
     @NonNull
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false, columnDefinition = "varchar(255)")
     private String firstName;
     @NonNull
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false, columnDefinition = "varchar(255)")
     private String lastName;
 
     @Setter(AccessLevel.PRIVATE)
     String username;
 
     @NonNull
-    @JsonProperty(value = "email")
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false, unique = true, columnDefinition = "varchar(255)")
     private String email;
     @NonNull
     @JsonIgnore
     private String password;
     @Enumerated(EnumType.STRING)
     private Roles authorities;
-
-
     @Setter(AccessLevel.PRIVATE)
     @Column(columnDefinition = "boolean default true")
     private Boolean isExpired;
@@ -59,8 +54,10 @@ public class UserEntity extends BaseIdentity<UserEntity> implements UserDetails,
     @Column(columnDefinition = "boolean default false")
     private Boolean isEnabled;
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = FileEntity.class, mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FileEntity> images;
+
+
 
     public UserEntity() {
     }

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Accessors(chain = true)
@@ -18,38 +19,25 @@ public class UserDTO {
     private Collection<? extends GrantedAuthority> authorities;
     private List<Images> images;
 
-    public UserDTO(String id, String username, String email,Collection<? extends GrantedAuthority> authorities, List<Images> images) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.images = images;
-        this.authorities = authorities;
-    }
 
     public UserDTO() {
 
     }
 
-    @Data
-    public static class Images {
-        private ImageType type;
-        private String url;
-
-        public Images(ImageType type, String url) {
-            this.type = type;
-            this.url = url;
-        }
+    public UserDTO(String id, String username, String email, Collection<? extends GrantedAuthority> authorities, List<Images> asList) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.authorities = authorities;
+        this.images =  asList;
     }
 
-    public enum ImageType {
-        PROFILE("view"),
-        MYDAY("myday"),
-        COVER("background"),
-        GALLERY("others");
-        private String title;
+    @Data
+    public static class Images {
+        private String url;
 
-        ImageType(String title) {
-            this.title = title;
+        public Images(String url) {
+            this.url = url;
         }
     }
 
